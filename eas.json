@@ -1,0 +1,35 @@
+{
+  "cli": {
+    "version": ">= 3.0.0"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "env": {
+        "OPENAI_API_KEY": "your-openai-key-here",
+        "PROXY_URL": "https://your-proxy-url.com"
+      },
+      "android": {
+        "gradleCommand": ":app:bundleRelease"
+      },
+      "ios": {
+        "buildConfiguration": "Release"
+      }
+    },
+    "internal": {
+      "developmentClient": true
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
