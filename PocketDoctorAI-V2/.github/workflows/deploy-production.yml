@@ -1,0 +1,63 @@
+name: 🚀 Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20.x'
+  AWS_REGION: ap-south-1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: ${{ env.NODE_VERSION }}, cache: 'npm' }
+      - run: cd server && npm ci
+      - run: cd server && npm test
+      - run: cd server && npm run lint
+
+  deploy-server:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: 🔑 Configure AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: 🔐 SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+      - name: 📤 Deploy
+        run: |
+          ssh -i ~/.ssh/deploy_key ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            set -e
+            cd /var/www/pocketdoctor-api
+            git pull origin main
+            npm ci --production
+            pm2 reload pocketdoctor-api --update-env
+            pm2 status
+          EOF
+      - name: 🏥 Health
+        run: |
+          sleep 10
+          curl -f https://api.pocketdoctor.ai/health
+
+  deploy-firebase:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm i -g firebase-tools
+      - run: |
+          firebase deploy --only firestore:rules,firestore:indexes,storage \
+            --token ${{ secrets.FIREBASE_TOKEN }} --project pocketdoctor-ai

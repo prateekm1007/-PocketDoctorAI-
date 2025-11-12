@@ -1,0 +1,8 @@
+# Render.yaml example for a web service (stream-friendly)
+services:
+  - type: web
+    name: pocketdoctor-openai-proxy
+    env: node
+    plan: starter
+    buildCommand: 'npm install'
+    startCommand: 'node index.js'

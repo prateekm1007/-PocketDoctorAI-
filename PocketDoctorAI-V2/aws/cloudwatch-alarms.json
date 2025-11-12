@@ -1,0 +1,94 @@
+{
+  "alarms": [
+    {
+      "AlarmName": "PocketDoctor-HighCPU",
+      "ComparisonOperator": "GreaterThanThreshold",
+      "EvaluationPeriods": 2,
+      "MetricName": "CPUUtilization",
+      "Namespace": "AWS/EC2",
+      "Period": 300,
+      "Statistic": "Average",
+      "Threshold": 80.0,
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-south-1:ACCOUNT_ID:pocketdoctor-alerts"
+      ],
+      "AlarmDescription": "CPU > 80% for 10 minutes"
+    },
+    {
+      "AlarmName": "PocketDoctor-HighLatency",
+      "ComparisonOperator": "GreaterThanThreshold",
+      "EvaluationPeriods": 3,
+      "MetricName": "TargetResponseTime",
+      "Namespace": "AWS/ApplicationELB",
+      "Period": 300,
+      "Statistic": "p99",
+      "Threshold": 2.0,
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-south-1:ACCOUNT_ID:pocketdoctor-alerts"
+      ],
+      "AlarmDescription": "p99 latency > 2s"
+    },
+    {
+      "AlarmName": "PocketDoctor-HighErrorRate",
+      "ComparisonOperator": "GreaterThanThreshold",
+      "EvaluationPeriods": 2,
+      "MetricName": "HTTPCode_Target_5XX_Count",
+      "Namespace": "AWS/ApplicationELB",
+      "Period": 300,
+      "Statistic": "Sum",
+      "Threshold": 10.0,
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-south-1:ACCOUNT_ID:pocketdoctor-critical-alerts"
+      ],
+      "AlarmDescription": "5XX > 10 in 5 min"
+    },
+    {
+      "AlarmName": "PocketDoctor-NoHealthyTargets",
+      "ComparisonOperator": "LessThanThreshold",
+      "EvaluationPeriods": 1,
+      "MetricName": "HealthyHostCount",
+      "Namespace": "AWS/ApplicationELB",
+      "Period": 60,
+      "Statistic": "Average",
+      "Threshold": 1.0,
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-south-1:ACCOUNT_ID:pocketdoctor-critical-alerts"
+      ],
+      "AlarmDescription": "No healthy backends"
+    },
+    {
+      "AlarmName": "PocketDoctor-HighTextractErrors",
+      "ComparisonOperator": "GreaterThanThreshold",
+      "EvaluationPeriods": 2,
+      "MetricName": "UserErrorCount",
+      "Namespace": "AWS/Textract",
+      "Period": 300,
+      "Statistic": "Sum",
+      "Threshold": 5.0,
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:ap-south-1:ACCOUNT_ID:pocketdoctor-alerts"
+      ],
+      "AlarmDescription": "Textract errors spike"
+    },
+    {
+      "AlarmName": "PocketDoctor-DailyBudgetExceeded",
+      "ComparisonOperator": "GreaterThanThreshold",
+      "EvaluationPeriods": 1,
+      "MetricName": "EstimatedCharges",
+      "Namespace": "AWS/Billing",
+      "Period": 86400,
+      "Statistic": "Maximum",
+      "Threshold": 50.0,
+      "ActionsEnabled": true,
+      "AlarmActions": [
+        "arn:aws:sns:us-east-1:ACCOUNT_ID:pocketdoctor-billing-alerts"
+      ],
+      "AlarmDescription": "Daily costs exceed $50"
+    }
+  ]
+}

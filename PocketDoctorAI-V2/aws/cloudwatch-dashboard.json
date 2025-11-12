@@ -1,0 +1,223 @@
+{
+  "dashboardName": "PocketDoctor-Production-Monitoring",
+  "dashboardBody": {
+    "widgets": [
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "AWS/EC2",
+              "CPUUtilization",
+              {
+                "stat": "Average"
+              }
+            ],
+            [
+              ".",
+              ".",
+              {
+                "stat": "Maximum"
+              }
+            ]
+          ],
+          "period": 300,
+          "stat": "Average",
+          "region": "ap-south-1",
+          "title": "\ud83d\udda5\ufe0f EC2 CPU Utilization",
+          "yAxis": {
+            "left": {
+              "min": 0,
+              "max": 100
+            }
+          },
+          "annotations": {
+            "horizontal": [
+              {
+                "value": 60,
+                "label": "Scale Up Threshold",
+                "color": "#ff7f0e"
+              },
+              {
+                "value": 80,
+                "label": "Critical",
+                "color": "#d62728"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "AWS/ApplicationELB",
+              "TargetResponseTime",
+              {
+                "stat": "p99"
+              }
+            ],
+            [
+              "... ",
+              {
+                "stat": "p95"
+              }
+            ],
+            [
+              "... ",
+              {
+                "stat": "Average"
+              }
+            ]
+          ],
+          "period": 300,
+          "stat": "Average",
+          "region": "ap-south-1",
+          "title": "\u23f1\ufe0f API Response Time (Latency)"
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "AWS/ApplicationELB",
+              "RequestCount",
+              {
+                "stat": "Sum"
+              }
+            ],
+            [
+              ".",
+              "HTTPCode_Target_2XX_Count",
+              {
+                "stat": "Sum"
+              }
+            ],
+            [
+              ".",
+              "HTTPCode_Target_4XX_Count",
+              {
+                "stat": "Sum"
+              }
+            ],
+            [
+              ".",
+              "HTTPCode_Target_5XX_Count",
+              {
+                "stat": "Sum"
+              }
+            ]
+          ],
+          "period": 300,
+          "stat": "Sum",
+          "region": "ap-south-1",
+          "title": "\ud83d\udcca Request Volume & Status Codes"
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "AWS/S3",
+              "NumberOfObjects",
+              {
+                "stat": "Average"
+              }
+            ],
+            [
+              ".",
+              "BucketSizeBytes",
+              {
+                "stat": "Average"
+              }
+            ]
+          ],
+          "period": 86400,
+          "stat": "Average",
+          "region": "ap-south-1",
+          "title": "\ud83d\udcbe S3 Storage Metrics"
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "AWS/Textract",
+              "UserErrorCount",
+              {
+                "stat": "Sum"
+              }
+            ],
+            [
+              ".",
+              "ServerErrorCount",
+              {
+                "stat": "Sum"
+              }
+            ],
+            [
+              ".",
+              "SuccessfulRequestCount",
+              {
+                "stat": "Sum"
+              }
+            ]
+          ],
+          "period": 300,
+          "stat": "Sum",
+          "region": "ap-south-1",
+          "title": "\ud83d\udcc4 Textract OCR Status"
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "AWS/AutoScaling",
+              "GroupDesiredCapacity"
+            ],
+            [
+              ".",
+              "GroupInServiceInstances"
+            ],
+            [
+              ".",
+              "GroupPendingInstances"
+            ],
+            [
+              ".",
+              "GroupTerminatingInstances"
+            ]
+          ],
+          "period": 300,
+          "stat": "Average",
+          "region": "ap-south-1",
+          "title": "\ud83d\udd04 Auto-Scaling Group Status"
+        }
+      },
+      {
+        "type": "metric",
+        "properties": {
+          "metrics": [
+            [
+              "CostAndUsage",
+              "EstimatedCharges",
+              {
+                "stat": "Maximum"
+              }
+            ]
+          ],
+          "period": 86400,
+          "stat": "Maximum",
+          "region": "us-east-1",
+          "title": "\ud83d\udcb0 Estimated Daily AWS Costs"
+        }
+      }
+    ]
+  }
+}

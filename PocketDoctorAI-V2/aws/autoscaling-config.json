@@ -1,0 +1,70 @@
+{
+  "LaunchTemplate": {
+    "LaunchTemplateName": "pocketdoctor-api-template",
+    "VersionDescription": "Production API server template v1",
+    "LaunchTemplateData": {
+      "ImageId": "ami-xxxxxxxx",
+      "InstanceType": "t3.small",
+      "KeyName": "pocketdoctor-key",
+      "IamInstanceProfile": {
+        "Arn": "arn:aws:iam::ACCOUNT_ID:instance-profile/EC2-S3-Textract-Role"
+      },
+      "SecurityGroupIds": [
+        "sg-XXXXXXXX"
+      ],
+      "UserData": "IyEvYmluL2Jhc2gKcG0yIHJlbG9hZCBwb2NrZXRkb2N0b3ItYXBp",
+      "TagSpecifications": [
+        {
+          "ResourceType": "instance",
+          "Tags": [
+            {
+              "Key": "Name",
+              "Value": "PocketDoctor-API-AutoScaled"
+            },
+            {
+              "Key": "Environment",
+              "Value": "Production"
+            }
+          ]
+        }
+      ],
+      "Monitoring": {
+        "Enabled": true
+      }
+    }
+  },
+  "AutoScalingGroup": {
+    "AutoScalingGroupName": "pocketdoctor-api-asg",
+    "LaunchTemplate": {
+      "LaunchTemplateName": "pocketdoctor-api-template",
+      "Version": "$Latest"
+    },
+    "MinSize": 2,
+    "MaxSize": 10,
+    "DesiredCapacity": 2,
+    "DefaultCooldown": 300,
+    "HealthCheckType": "ELB",
+    "HealthCheckGracePeriod": 300,
+    "VPCZoneIdentifier": "subnet-XXXXXXXX,subnet-YYYYYYYY",
+    "TargetGroupARNs": [
+      "arn:aws:elasticloadbalancing:ap-south-1:ACCOUNT_ID:targetgroup/pocketdoctor-api-tg/XXXXXXXXXX"
+    ]
+  },
+  "TargetGroup": {
+    "Name": "pocketdoctor-api-tg",
+    "Protocol": "HTTP",
+    "Port": 3000,
+    "VpcId": "vpc-XXXXXXXX",
+    "HealthCheckEnabled": true,
+    "HealthCheckProtocol": "HTTP",
+    "HealthCheckPath": "/health",
+    "HealthCheckIntervalSeconds": 30,
+    "HealthCheckTimeoutSeconds": 5,
+    "HealthyThresholdCount": 2,
+    "UnhealthyThresholdCount": 3,
+    "Matcher": {
+      "HttpCode": "200"
+    },
+    "TargetType": "instance"
+  }
+}
